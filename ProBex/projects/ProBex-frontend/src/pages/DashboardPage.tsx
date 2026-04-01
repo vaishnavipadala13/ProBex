@@ -25,15 +25,12 @@ export default function DashboardPage() {
         document.documentElement.setAttribute('data-theme', theme)
     }, [theme])
 
-    // Redirect to landing if not logged in or wallet not connected
+    // Redirect to login if not authenticated
     useEffect(() => {
         if (!authLoading && !user) {
             navigate('/login')
         }
-        if (!authLoading && !activeAddress) {
-            navigate('/')
-        }
-    }, [user, activeAddress, authLoading, navigate])
+    }, [user, authLoading, navigate])
 
     const handleSignOut = async () => {
         await supabase.auth.signOut()
@@ -46,7 +43,7 @@ export default function DashboardPage() {
     }
 
     // Don't render while checking auth or if not authenticated
-    if (authLoading || !user || !activeAddress) return null
+    if (authLoading || !user) return null
 
     // Convert live QUESTIONS to PredictionMarket for analytics tab
     const analyticsMarkets: PredictionMarket[] = QUESTIONS.filter(q => q.live).map(q => {
